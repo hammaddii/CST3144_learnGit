@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Depot</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <h1 v-text="sitename"></h1>
+            <button v-on:click="showCheckout">
+                {{cartItemCount}}
+                <span class="fas fa-cart-plus"></span> Checkout
+            </button>
+        </header>
+
+        <main>
+            <div v-if="showProduct">
+                <figure>
+                    <img v-bind:src="product.image">
+                </figure>
+    
+                <h2 v-text="product.title"></h2>
+                <p v-html="product.description"></p>
+                <p>Price: {{product.price}}</p> <!--double {{}} can be used instead of v-text-->
+    
+                <button v-on:click="addToCart" v-if="canAddToCart">Add to Cart</button>
+                <button disabled="disabled" v-else>Add to Cart</button>
+            </div>
+
+            <div v-else>
+                <h2>Checkout</h2>
+            </div>
+        </main>
+
+    </div> <!--this be the vue.js mounting-->
+    <script type="text/javascript">
+        let webstore = new Vue({ //this be called vue instance
+            el: '#app', //element. COMMA IS ESSENTIAL
+            data: {
+                sitename: 'VueJS Pet Deopt',  //here sitename is the same as v-text a few lines above
+                product: { //this is an array boi. got all the datas of arrays
+                    id: 1001,
+                    title: "Cat food 5kg bag",
+                    description: "A 5kg bag of <em>irresistible </em>" + "organic goodness for your cat",
+                    price: 2000,
+                    image: "images/catFood.png",
+                    availableInventory: 6   
+                },
+                cart: [], // array to store items in shopping cart
+                showProduct: true,
+            },
+
+            methods:{
+                addToCart: function(){
+                    this.cart.push (this.product.id);
+                },
+                showCheckout(){
+                    this.showProduct = this.showProduct? false : true;
+                } 
+            },
+            computed:{
+                cartItemCount: function(){
+                    return this.cart.length ||"";
+                },
+                canAddToCart: function(){
+                    return this.product.availableInventory > this.cartItemCount;
+                }
+            },
+
+        })
+    </script>
+</body>
+
+</html>
